@@ -1,7 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Input from '../../components/UI/Input/Input';
 import classes from './Team.module.css';
 import { checkValidity, updateObject } from '../../shared/utility';
+import Button from '../../components/UI/Button/Button';
+import axios from '../../axios';
+import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
+import * as actions from '../../store/actions/index';
+import { connect } from 'react-redux';
+import Spinner from '../../components/UI/Spinner/Spinner';
+
 const Team = props => {
   const [teamForm, setTeamForm] = useState({
     name: {
@@ -43,8 +50,17 @@ const Team = props => {
     setTeamForm(updatedTeamForm);
     setFormIsValid(formIsValid);
   };
+  const saveHandler = event => {
+    event.preventDefault();
+    const formData = {};
+    for (let formElementIdentifier in teamForm) {
+      formData[formElementIdentifier] = teamForm[formElementIdentifier].value;
+    }
+    console.log(formData);
+    props.onAddTeam(formData);
+  };
   let form = (
-    <form>
+    <form onSubmit={saveHandler}>
       {formElementArray.map(formElement => (
         <Input
           key={formElement.id}
@@ -58,9 +74,12 @@ const Team = props => {
           changed={event => inputChangedHandler(event, formElement.id)}
         />
       ))}
-      <button disabled={!formIsValid}>Kaydet</button>
+      <Button disabled={!formIsValid} buttonType='Success'>
+        KAYDET
+      </Button>
     </form>
   );
+  if (props.loading) form = <Spinner />;
   return (
     <div className={classes.Team}>
       <h4>Takım Bilgileri</h4>
@@ -68,4 +87,18 @@ const Team = props => {
     </div>
   );
 };
-export default Team;
+const mapStateToProps = state => {
+  return {
+    teams: state.team.teams,
+    loading: state.team.loading
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    onAddTeam: teamData => dispatch(actions.addTeam(teamData))
+  };
+};
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withErrorHandler(Team, axios));
