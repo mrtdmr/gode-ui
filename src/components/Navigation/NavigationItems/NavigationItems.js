@@ -5,13 +5,13 @@ const navigationItems = props => {
   return (
     <ul className={classes.NavigationItems}>
       <NavigationItem link='/' exact>
-        Main Page
+        Ana Sayfa
       </NavigationItem>
       <NavigationItem link='/teams' exact>
-        Teams
+        Takımlar
       </NavigationItem>
       <NavigationItem link='/students' exact>
-        Students
+        Öğrenciler
       </NavigationItem>
     </ul>
   );
