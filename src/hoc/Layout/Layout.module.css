@@ -1,6 +1,3 @@
-.Box {
-  width: 400px;
-  height: 200px;
-  padding: 10px;
-  background: linear-gradient(#f5c964, #f5f2eb);
+.Content {
+  margin-top: 72px;
 }
