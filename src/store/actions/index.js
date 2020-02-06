@@ -1,1 +1,1 @@
-export { addTeam, fetchTeams } from './team';
+export { addTeam, fetchTeams, getSelectedTeam } from './team';

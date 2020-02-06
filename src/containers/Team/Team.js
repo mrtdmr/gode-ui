@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Input from '../../components/UI/Input/Input';
 import classes from './Team.module.css';
 import { checkValidity, updateObject } from '../../shared/utility';
@@ -26,6 +26,28 @@ const Team = props => {
       touched: false
     }
   });
+  useEffect(() => {
+    if (props.selectedTeam) {
+      const updatedFormElement = updateObject(teamForm['name'], {
+        value: props.selectedTeam[0].name,
+        valid: checkValidity(
+          props.selectedTeam[0].name,
+          teamForm['name'].validation
+        ),
+        touched: true
+      });
+      const updatedTeamForm = updateObject(teamForm, {
+        name: updatedFormElement
+      });
+      let formIsValid = true;
+      for (let inputIdentifier in updatedTeamForm) {
+        formIsValid = updatedTeamForm[inputIdentifier].valid && formIsValid;
+      }
+      setTeamForm(updatedTeamForm);
+      setFormIsValid(formIsValid);
+    }
+    console.log(props.selectedTeam ? props.selectedTeam[0] : 'boş');
+  }, [props.selectedTeam]);
   const [formIsValid, setFormIsValid] = useState(false);
   const formElementArray = [];
   for (let key in teamForm) {
@@ -84,13 +106,15 @@ const Team = props => {
     <div className={classes.Team}>
       <h4>Takım Bilgileri</h4>
       {form}
+      <br />
     </div>
   );
 };
 const mapStateToProps = state => {
   return {
     teams: state.team.teams,
-    loading: state.team.loading
+    loading: state.team.loading,
+    selectedTeam: state.team.selectedTeam
   };
 };
 const mapDispatchToProps = dispatch => {

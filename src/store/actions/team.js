@@ -46,9 +46,7 @@ export const fetchTeams = () => {
       .get('/teams.json')
       .then(res => {
         const fetchedTeams = [];
-        console.log(res.data);
         for (let key in res.data) {
-          console.log(key);
           fetchedTeams.push({
             ...res.data[key],
             id: key
@@ -60,4 +58,8 @@ export const fetchTeams = () => {
         dispatch(fetchTeamsFail(err));
       });
   };
+};
+
+export const getSelectedTeam = id => {
+  return { type: actionTypes.GET_SELECTED_TEAM, teamId: id };
 };

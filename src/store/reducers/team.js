@@ -2,7 +2,8 @@ import * as actionTypes from '../actions/actionTypes';
 import { updateObject } from '../../shared/utility';
 const initialState = {
   teams: [],
-  loading: false
+  loading: false,
+  selectedTeam: null
 };
 const addTeamStart = (state, action) => {
   return updateObject(state, { loading: true });
@@ -27,6 +28,12 @@ const fetchTeamsSuccess = (state, action) => {
 const fetchTeamsFail = (state, action) => {
   return updateObject(state, { loading: false });
 };
+const getSelectedTeam = (state, action) => {
+  const team = state.teams.filter(t => t.id === action.teamId);
+  return updateObject(state, {
+    selectedTeam: team
+  });
+};
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -42,8 +49,11 @@ const reducer = (state = initialState, action) => {
       return fetchTeamsSuccess(state, action);
     case actionTypes.FETCH_TEAMS_FAIL:
       return fetchTeamsFail(state, action);
+    case actionTypes.GET_SELECTED_TEAM:
+      return getSelectedTeam(state, action);
     default:
       return state;
   }
 };
+
 export default reducer;

@@ -11,13 +11,20 @@ const Teams = props => {
   const { onFetchTeams } = props;
   useEffect(() => {
     onFetchTeams();
-  }, []);
+  }, [onFetchTeams]);
+  const selectedTeamHandler = id => {
+    props.onGetSelectedTeam(id);
+  };
   return (
     <Aux>
       <TeamInsert />
       <div className={classes.Teams}>
         {props.teams.map(team => (
-          <Team key={team.id} name={team.name} />
+          <Team
+            key={team.id}
+            name={team.name}
+            click={() => selectedTeamHandler(team.id)}
+          />
         ))}
       </div>
     </Aux>
@@ -26,12 +33,14 @@ const Teams = props => {
 const mapStateToProps = state => {
   return {
     teams: state.team.teams,
-    loading: state.team.loading
+    loading: state.team.loading,
+    selectedTeam: state.team.selectedTeam
   };
 };
 const mapDispatchToProps = dispatch => {
   return {
-    onFetchTeams: () => dispatch(actions.fetchTeams())
+    onFetchTeams: () => dispatch(actions.fetchTeams()),
+    onGetSelectedTeam: id => dispatch(actions.getSelectedTeam(id))
   };
 };
 export default connect(
